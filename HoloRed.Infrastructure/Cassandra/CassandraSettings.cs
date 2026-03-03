@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace HoloRed.Infrastructure.Cassandra
+﻿namespace HoloRed.Infrastructure.Cassandra
 {
-    internal class CassandraSettings
+    public class CassandraSettings
     {
+        public string Host { get; set; } = "localhost";
+        public int Port { get; set; } = 9042;
+        public string Keyspace { get; set; } = "holored";
     }
 }
