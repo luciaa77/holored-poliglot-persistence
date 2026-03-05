@@ -29,9 +29,12 @@ namespace HoloRed.Infrastructure.Cassandra
         {
             try
             {
+                // Cassandra "date" => LocalDate (NO DateTime)
+                var cassFecha = new LocalDate(impacto.Fecha.Year, impacto.Fecha.Month, impacto.Fecha.Day);
+
                 var bound = _insertStmt.Bind(
                     impacto.SectorId,
-                    impacto.Fecha.ToDateTime(TimeOnly.MinValue), // Cassandra date
+                    cassFecha,
                     impacto.Timestamp,
                     impacto.NaveAtacante,
                     impacto.NaveObjetivo,
@@ -54,9 +57,12 @@ namespace HoloRed.Infrastructure.Cassandra
         {
             try
             {
+                // Cassandra "date" => LocalDate
+                var cassFecha = new LocalDate(fecha.Year, fecha.Month, fecha.Day);
+
                 var bound = _selectStmt.Bind(
                     sectorId,
-                    fecha.ToDateTime(TimeOnly.MinValue)
+                    cassFecha
                 );
 
                 var rs = await _session.ExecuteAsync(bound).ConfigureAwait(false);
@@ -64,10 +70,12 @@ namespace HoloRed.Infrastructure.Cassandra
                 var list = new List<Impacto>();
                 foreach (var row in rs)
                 {
+                    var rowFecha = row.GetValue<LocalDate>("fecha");
+
                     list.Add(new Impacto
                     {
                         SectorId = row.GetValue<string>("sector_id"),
-                        Fecha = DateOnly.FromDateTime(row.GetValue<DateTime>("fecha")),
+                        Fecha = new DateOnly(rowFecha.Year, rowFecha.Month, rowFecha.Day),
                         Timestamp = row.GetValue<DateTime>("ts"),
                         NaveAtacante = row.GetValue<string>("nave_atacante"),
                         NaveObjetivo = row.GetValue<string>("nave_objetivo"),
