@@ -29,5 +29,21 @@ namespace HoloRed.Api.Controllers
 
             return Ok(new { codigoNave = codigo, bahiaLiberada = result.bahia });
         }
+
+        [HttpPost("atraque")]
+        public async Task<IActionResult> Atraque([FromBody] DockRequest request)
+        {
+            var codigo = (request.CodigoNave ?? "").Trim();
+            if (string.IsNullOrWhiteSpace(codigo))
+                return BadRequest(new { error = "CODIGO_NAVE_REQUERIDO" });
+
+            var result = await _docking.SolicitarAtraqueAsync(codigo);
+
+            // Ajusta estos if según tu DockingService (te lo explico abajo)
+            if (!result.ok && result.error == "NO_HAY_BAHIAS")
+                return Conflict(new { error = "NO_HAY_BAHIAS", message = "No hay bahías disponibles" });
+
+            return Ok(new { codigoNave = codigo, bahiaAsignada = result.bahia });
+        }
     }
 }

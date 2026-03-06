@@ -4,10 +4,7 @@ using HoloRed.Infrastructure.Cassandra;
 using HoloRed.Domain.Telemetria;
 using HoloRed.Infrastructure.Neo4j;
 using HoloRed.Domain.Inteligencia;
-using HoloRed.Infrastructure.Cassandra;
-using HoloRed.Infrastructure.Neo4j;
-using HoloRed.Domain.Telemetria;
-using HoloRed.Domain.Inteligencia;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
